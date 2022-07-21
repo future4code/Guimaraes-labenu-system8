@@ -1,10 +1,10 @@
 import knex from "knex";
 import dotenv from "dotenv";
-import { Turmas } from "../data/Turmas";
+import {Especialidades} from "../data/Especialidades"
 
 dotenv.config() 
 
-export class ClassDataBase {
+export class SpecialtyDataBase {
 
     private connection = knex({
         client: "mysql",
@@ -20,13 +20,12 @@ export class ClassDataBase {
 
     
 
-    public createClass = async (turmas: Turmas) => {
+    public createSpecialty = async (especialidades: Especialidades) => {
         try {
-            await this.connection("turmas")
+            await this.connection("especialidade")
             .insert({
-                id: turmas.getId(),
-                nome: turmas.getNome(),
-                modulo: turmas.getModulo()
+                id: especialidades.getId(),
+                nome: especialidades.getNome()
             })
         } catch (error: any){
             throw new Error(error.sqlMessage || error.message)
