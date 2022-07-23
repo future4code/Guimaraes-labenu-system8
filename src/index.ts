@@ -79,10 +79,10 @@ app.post("/alunos", async (req: Request, res: Response) => {
         
         try {
     
-            const { name, email, birthDate } = req.body
+            const { name, email, birthDate, turma_id, hobbys}:any = req.body
             const id = uuid().toString();
 
-            const newStudent: Student = new Student (id, name, email, birthDate)
+            const newStudent: Student = new Student (id, name, email, birthDate, turma_id, hobbys)
             const studentData = new studentDB()
 
             await studentData.createStudent(newStudent)
@@ -94,5 +94,40 @@ app.post("/alunos", async (req: Request, res: Response) => {
             
         }
     }
+)
+
+app.get("/alunos", async (req: Request, res: Response) => {
+    try {
+        const studentData = new studentDB()
+        const students = await studentData.getAllStudents()
+        res.status(200).json(students)
+    } catch (error: any) {
+        res.status(400).send(error.sqlMessage || error.message)
+    }
+}
+)
+
+app.get("/alunos/:id", async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id
+        const studentData = new studentDB()
+        const student = await studentData.getStudentById(id)
+        res.status(200).json(student)
+    } catch (error: any) {
+        res.status(400).send(error.sqlMessage || error.message)
+    }
+}
+)
+
+app.get("/alunos/:name", async (req: Request, res: Response) => {
+    try {
+        const name = req.params.name
+        const studentData = new studentDB()
+        const student = await studentData.getStudentByName(name)
+        res.status(200).json(student)
+    } catch (error: any) {
+        res.status(400).send(error.sqlMessage || error.message)
+    }
+}
 )
 
