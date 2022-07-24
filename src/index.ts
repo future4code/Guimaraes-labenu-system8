@@ -9,12 +9,74 @@ import {Hobbies} from "./data/Hobbies";
 import {HobbiesDataBase} from "./endpoints/createHobbies"
 import {Student} from "./data/Student";
 import { studentDB } from "./endpoints/createStudent";
+import { Docente } from "./data/Docente";
+import { DocenteDatabase } from "./data/DocenteDatabase";
 
 
 app.get("/teste", (req: Request, res: Response) => {
     res.send("blablabla")
 })
 
+app.post("/docente",async (req: Request, res: Response) => {
+    
+    try {
+        const {name, email,data_nasc,especialidades} = req.body
+        if(!name || !email|| !data_nasc ||!especialidades){
+            throw new Error("Requisição com parâmetros inválidos")
+        }
+        const turma_id=""
+        const data= data_nasc.split("/")
+        const nascimento=new Date(`${data[2]}/${data[1]}/${data[0]}`)
+        const newDocente=new Docente(name,email,nascimento,turma_id,especialidades)
+        const docenteDB = new DocenteDatabase()
+
+        await docenteDB.createDocente(newDocente)
+
+        res.status(200).send("Docente cadastrado com sucesso")
+        
+    } catch (error: any) {
+        res.status(400).send(error.sqlMessage || error.message)
+        
+    }
+})
+app.get("/docentes", async (req: Request, res: Response) => {
+    try{
+        const DocentDB= new DocenteDatabase()
+      res.status(200).send( await DocentDB.getAllDocentes())
+    }catch (error: any) {
+        res.status(400).send(error.sqlMessage || error.message)
+        
+    }
+})
+
+app.put("/docente",async (req: Request, res: Response) =>{
+
+    try{
+       
+        const {id}=req.body
+        const {turma_id}=req.body 
+       
+        if(!id  || !turma_id ){
+            throw new Error(" Id inválido")
+        }
+        const DocenteDB= new DocenteDatabase() 
+        const docente=await DocenteDB.getdocente(id)
+        
+         
+        if(docente){
+            DocenteDB.mudarDocenteTurma(id,turma_id)
+            res.send("alteração de turma concluída com sucesso !")
+        }else{
+            throw new Error("Docente não encontrado")
+        }
+    
+
+    }catch (error: any) {
+        res.status(400).send(error.sqlMessage || error.message)
+        
+    }
+
+})
 app.post("/turmas", async (req: Request, res: Response) => {
     
     try {
