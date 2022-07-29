@@ -1,0 +1,23 @@
+POST  http://localhost:3003/docente
+Content-Type: application/json
+
+{
+    "name": "Leonardo souza",
+    "email": "leo@gmail.com",
+    "data_nasc": "1992/03/10",
+    "especialidades": ["CSS","JS"]
+}
+
+###
+GET  http://localhost:3003/docentes
+
+###
+PUT   http://localhost:3003/docente
+Content-Type: application/json
+
+{
+    "id":"48349fb0-def9-4593-a458-f8bb7effa9ca",
+    "turma_id":"531a2121-ac29-4410-84e8-b95dbeeb7811"
+}
+
+
